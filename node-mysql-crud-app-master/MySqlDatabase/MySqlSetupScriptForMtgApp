@@ -1,0 +1,883 @@
+DROP TABLE IF EXISTS `error_messages`;
+DROP TABLE IF EXISTS `comments`;
+DROP TABLE IF EXISTS `links`;
+DROP TABLE IF EXISTS `users`;
+
+DROP TABLE IF EXISTS `cards`;
+
+CREATE TABLE `cards` (
+  `card_id` int not null AUTO_INCREMENT,
+  `uuid` varchar(36) NOT NULL,
+  `index` int NOT NULL,
+  `id` int NOT NULL,
+  `artist` varchar(80) NOT NULL,
+  `asciiname` varchar(80) NOT NULL,
+  `availability` varchar(40) NOT NULL,
+  `borderColor` varchar(20) NOT NULL,
+  `cardKingdomFoilId` varchar(20) NOT NULL,
+  `cardKingdomId` varchar(10) NOT NULL,
+  `colorIdentity` varchar(10) NOT NULL,
+  `colorIndicator` varchar(10) NOT NULL,
+  `colors` varchar(20) NOT NULL,
+  `convertedManaCost` varchar(10) NOT NULL,
+  `duelDeck` varchar(4) NOT NULL,
+  `edhrecRank` varchar(10) NOT NULL,
+  `faceConvertedManaCost` varchar(10) NOT NULL,
+  `faceName` varchar(80) NOT NULL,
+  `flavorName` varchar(80) NOT NULL,
+  `flavorText` text,
+  `frameEffects` varchar(80) NOT NULL,
+  `frameVersion` varchar(8) NOT NULL,
+  `hand` varchar(4) NOT NULL,
+  `hasAlternativeDeckLimit` bit(1) NOT NULL,
+  `hasContentWarning` bit(1) NOT NULL,
+  `hasFoil` bit(1) NOT NULL,
+  `hasNonFoil` bit(1) NOT NULL,
+  `isAlternative` bit(1) NOT NULL,
+  `isFullArt` bit(1) NOT NULL,
+  `isOnlineOnly` bit(1) NOT NULL,
+  `isOversized` bit(1) NOT NULL,
+  `isPromo` bit(1) NOT NULL,
+  `isReprint` bit(1) NOT NULL,
+  `isReserved` bit(1) NOT NULL,
+  `isStarter` bit(1) NOT NULL,
+  `isStorySpotlight` bit(1) NOT NULL,
+  `isTextless` bit(1) NOT NULL,
+  `isTimeshifted` bit(1) NOT NULL,
+  `keywords` varchar(120) NOT NULL,
+  `layout` varchar(20) NOT NULL,
+  `leadershipSkills` varchar(255) NOT NULL,
+  `life` varchar(8) NOT NULL,
+  `loyalty` varchar(8) NOT NULL,
+  `manaCost` varchar(80) NOT NULL,
+  `mcmId` varchar(10) NOT NULL,
+  `mcmMetaId` varchar(10) NOT NULL,
+  `mtgArenaId` varchar(20) NOT NULL,
+  `mtgjsonV4Id` varchar(36) NOT NULL,
+  `mtgoFoilId` varchar(10) NOT NULL,
+  `mtgoId` varchar(10) NOT NULL,
+  `multiverseId` varchar(10) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `number` varchar(10) NOT NULL,
+  `originalText` text,
+  `originalType` varchar(80) NOT NULL,
+  `otherFaceIds` varchar(255) NOT NULL,
+  `power` varchar(20) NOT NULL,
+  `printings` text,
+  `promoTypes` varchar(120) NOT NULL,
+  `purchaseUrls` text,
+  `rarity` varchar(20) NOT NULL,
+  `scryfallId` varchar(36) NOT NULL,
+  `scryfallIluserslustrationId` varchar(36) NOT NULL,
+  `scryfallOracleId` varchar(36) NOT NULL,
+  `setCode` varchar(10) NOT NULL,
+  `side` varchar(10) NOT NULL,
+  `subtypes` varchar(80) NOT NULL,
+  `supertypes` varchar(80) NOT NULL,
+  `tcgplayerProductId` varchar(10) NOT NULL,
+  `text` text,
+  `toughness` varchar(10) NOT NULL,
+  `type` varchar(80) NOT NULL,
+  `types` varchar(80) NOT NULL,
+  `variations` text,
+  `watermark` varchar(20) DEFAULT '',
+  PRIMARY KEY (`card_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `users` (
+  `User_ID` int NOT NULL AUTO_INCREMENT,
+  `User_Name` varchar(40) NOT NULL,
+  `Email` varchar(255) NOT NULL,
+  `password` varchar(40) NOT NULL,
+  `SignUp_Date` datetime NOT NULL,
+  `Rank` int NOT NULL,
+  `User_Score` int NOT NULL,
+  `Active` bit(1) NOT NULL,
+  `FailedLoginAttempts` tinyint NOT NULL,
+  `CreatedBy` varchar(50) NOT NULL,
+  `CreatedDate` datetime NOT NULL,
+  `ModifiedBy` varchar(50) NOT NULL,
+  `ModifiedDate` datetime NOT NULL,
+  PRIMARY KEY (`User_ID`),
+  UNIQUE KEY `UIX_MTG_Users_User_Name` (`User_Name`),
+  UNIQUE KEY `UIX_MTG_Users_Email` (`Email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `links` (
+  `Link_ID` int NOT NULL AUTO_INCREMENT,
+  `Link_Name` varchar(255) NOT NULL,
+  `Card_1` varchar(36)  NOT NULL,
+  `Card_2` varchar(36)  NOT NULL,
+  `User_Score` int NOT NULL,
+  `Creator_Score` int NOT NULL,
+   `Creator_User_ID` int NOT NULL,
+  `Avg_Comment_Score` int not null,
+  `Number_of_Comments` int not null,
+  `CreatedBy` varchar(50)  NOT NULL,
+  `CreatedDate` datetime NOT NULL,
+  `ModifiedBy` varchar(50)  NOT NULL,
+  `ModifiedDate` datetime NOT NULL,
+  PRIMARY KEY (`Link_ID`),
+    UNIQUE KEY `UIX_MTG_Links_Link_Name` (`Link_Name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `comments` (
+  `Comment_ID` int NOT NULL AUTO_INCREMENT,
+  `Link_ID` int NOT NULL,
+  `User_ID` int not null,
+  `Score` int NOT NULL,
+  `Comment` varchar(255) NOT NULL,
+  `CreatedBy` varchar(50)  NOT NULL,
+  `CreatedDate` datetime NOT NULL,
+  `ModifiedBy` varchar(50)  NOT NULL,
+  `ModifiedDate` datetime NOT NULL,
+  PRIMARY KEY (`Comment_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE mtg.`error_messages` (
+`ErrorNumber` int NOT NULL,
+`ErrorMessage` varchar(255) NOT NULL,
+`ErrorSource` varchar(255) NOT NULL,
+PRIMARY KEY (`ErrorNumber`, `ErrorSource`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+SELECT * FROM mtg.cards 
+WHERE name like '%a%';
+
+    SELECT * FROM mtg.Cards WHERE uuid = '38513fa0-ea83-5642-8ecd-4f0b3daa6768';
+    
+;
+
+-- run this on command line because the GUI interface can not handle the large number of result sets:
+-- "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u mtgAdmin -P3306 -Dmtg -p  -t < .\Documents\mysql_procs.sql
+-- GRANT SYSTEM_USER ON *.* TO mtgAdmin;
+
+-- At the start of the script, the Users table will be cleared of the test users
+-- The return value for success (rowsAffected/success) has been changed to 1 for all procedures.
+-- a 0 means the row was not found
+-- 2 or more rows affected is an issue with these procedures which should only act one one row at a time.
+-- other procedures wil0 return a 
+-- -1 for blank password supplied by user
+-- -2 for invalid password
+-- -3 for inactive user
+-- -9 for unknown error
+
+-- WHEN Creating a user, the procedure will return the new user's user ID
+
+SELECT 'Starting';
+
+DELETE FROM mtg.`Error_Messages` WHERE `ErrorNumber` <= 0;
+
+DROP PROCEDURE IF EXISTS `User_Create`;
+DELIMITER //
+CREATE PROCEDURE `User_Create` (
+	IN userName varchar(20),
+	IN emailAddress varchar(255),
+    IN encryptedPassword varchar(40),
+	IN userRank int,
+	IN userScore int )
+BEGIN
+	DECLARE status int;
+    SET status = 0;
+    
+	IF userName = '' AND  status = 0
+    THEN
+			SET status = -1001;
+	END IF;
+	IF emailAddress = '' AND  status = 0
+    THEN
+			SET status = -1002;
+	END IF;
+	IF encryptedPassword = '' AND  status = 0
+    THEN
+			SET status = -1003;
+	END IF;
+
+	IF status = 0
+    THEN
+		IF (SELECT 1 = 1 FROM mtg.Users WHERE `User_Name` = userName)
+ 		THEN
+			BEGIN
+				SET status = -1004;
+            END;
+        ELSE
+			BEGIN
+				IF (SELECT 1 = 1 FROM mtg.Users WHERE `Email` = emailAddress)
+				THEN
+					BEGIN
+						SET status = -1005;
+					END;
+				ELSE
+					BEGIN
+						INSERT INTO mtg.Users ( `User_Name`, `Email`, `password`, `SignUp_Date`, `Rank`, `User_Score`, `Active`, `FailedLoginAttempts`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate` )
+						SELECT userName, emailAddress, encryptedPassword, CURRENT_TIMESTAMP(), userRank, userScore, 1, 0, current_user(), current_timestamp(), current_user(), current_timestamp();
+    
+						SELECT last_insert_id() INTO status;
+					END;
+				END IF; 
+			END;
+		END IF; 
+	END IF;  
+
+	IF status >= 0
+    THEN
+		SELECT User_ID, User_Name, Email, SignUp_Date, `Rank`, User_Score, `Active`, FailedLoginAttempts FROM mtg.Users WHERE User_ID = status;
+    ELSE
+		SELECT status as User_ID, '' AS User_Name, '' AS Email, '' AS SignUp_Date, 0 AS `Rank`, 0 AS User_Score, 0 as `Active`, 0 as FailedLoginAttempts;
+    END IF;
+END //
+DELIMITER ;
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1001, 'Missing user name', 'User_Create';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1002, 'Missing email address', 'User_Create';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1004, 'User name already exists', 'User_Create';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1005, 'Email address already exists', 'User_Create';
+
+DROP PROCEDURE IF EXISTS `User_Update`;
+DELIMITER //
+CREATE PROCEDURE `User_Update` (
+    IN userID int,
+	IN userName varchar(20),
+	IN emailAddress varchar(255),
+	IN userRank int,
+	IN userScore int )
+BEGIN
+
+	DECLARE status int;
+    SET status = 0;
+    
+	IF userName = '' AND  status = 0
+    THEN
+			SET status = -1101;
+	END IF;
+	IF emailAddress = '' AND  status = 0
+    THEN
+			SET status = -1102;
+	END IF;
+
+	IF status = 0
+    THEN
+		UPDATE mtg.Users 
+		SET    `User_Name`   	= userName
+			, `Email`       	= emailAddress
+			, `SignUp_Date` 	= current_timestamp()
+			, `Rank`        	= userRank
+			, `User_Score`  	= userScore
+			, `Active`         = 1
+			, `CreatedBy` = current_user()
+			, `CreatedDate`	= current_timestamp()
+			, `ModifiedBy` = current_user()
+			, `ModifiedDate`	= current_timestamp()
+		WHERE `User_ID` = userID;    
+        
+		SELECT ROW_COUNT() INTO status;
+	END IF;
+
+	IF status = 1
+    THEN
+		SELECT User_ID, User_Name, Email, SignUp_Date, `Rank`, User_Score FROM mtg.Users WHERE User_ID = userID;
+    ELSE
+		SELECT status as User_ID, '' AS User_Name, '' AS Email, '' AS SignUp_Date, 0 AS `Rank`, 0 AS User_Score;
+    END IF;
+
+    
+END //
+DELIMITER ;
+
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1101, 'Missing user name', 'User_Update';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1102, 'Missing email address', 'User_Update';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT 0, 'User not found', 'User_Update';
+
+
+DROP PROCEDURE IF EXISTS `User_Activate`;
+DELIMITER //
+CREATE PROCEDURE `User_Activate` (
+    IN userID int
+)
+BEGIN
+	UPDATE mtg.Users 
+    SET    `Active` = 1
+         , `ModifiedBy` = current_user()
+         , `ModifiedDate`	= current_timestamp()
+    WHERE `User_ID` = userID;   
+    
+    SELECT ROW_COUNT() AS rowsAffected;   
+END //
+DELIMITER ;
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT 0, 'User not found', 'User_Activate';
+
+
+DROP PROCEDURE IF EXISTS `User_Deactivate`;
+DELIMITER //
+CREATE PROCEDURE `User_Deactivate` (
+    IN userID int
+)
+BEGIN
+	UPDATE mtg.Users 
+    SET    `Active` = 0
+         , `ModifiedBy` = current_user()
+         , `ModifiedDate`	= current_timestamp()
+    WHERE `User_ID` = userID;    
+    
+    SELECT ROW_COUNT() AS rowsAffected;
+
+END //
+DELIMITER ;
+
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT 0, 'User not found', 'User_Deactivate';
+
+
+DROP PROCEDURE IF EXISTS `User_Login_With_Username`;
+DELIMITER //
+CREATE PROCEDURE `User_Login_With_Username` (
+    IN username varchar(20),
+    IN encryptedPassword varchar(40)
+)
+BEGIN
+-- The return value for success (rowsAffected/success) has been changed to 1 for all procedures.
+-- a 0 means the user / row was not found
+-- 2 or more rows affected is an issue with these procedures which should only act one one row at a time.
+-- -1203 for blank password supplied by user (the caller should check for empty passwords prior to encryption)
+-- -1202 for invalid password
+-- -1201 for inactive user
+-- 0 for unknown user
+
+	DECLARE myUserID int ;    
+    DECLARE currentPassword varchar(40);
+    DECLARE activeStatus int;
+    DECLARE loginStatus int;
+	DECLARE failedAttempts int;
+    DECLARE status int;
+    
+    SET status := 0;
+    
+	SELECT `User_ID`, `FailedLoginAttempts`, `Active`,`password`
+	INTO myUserID, failedAttempts, activeStatus, currentPassword
+	FROM mtg.Users 
+	WHERE `User_Name` = username;
+
+	SELECT ROW_COUNT() INTO loginStatus;
+    
+    IF status = 1 
+    THEN
+        IF encryptedPassword = ''
+		THEN
+			SET status := -1203;
+            -- does not count as a fail
+		
+        END IF;
+		IF failedAttempts > 3
+		THEN
+			SET status := -1201;
+            -- don't allow fails to obverload the server by dowing extra work.
+        END IF;
+		IF activeStatus = 0
+		THEN
+			SET status := -1201;
+            -- don't allow fails to overload the server by dowing extra work.
+        END IF;
+		IF currentPassword <> encryptedPassword THEN
+			SET status := -2;
+            
+            UPDATE mtg.Users 
+			SET    `FailedLoginAttempts` = failedAttempts + 1
+				, `ModifiedBy` = current_user()
+				, `ModifiedDate`	= current_timestamp()
+			WHERE `User_ID` = myUserID;   
+
+			IF failedAttempts > 3
+			THEN
+				CALL User_Deactivate( myUserID, @rowsAffected );
+				SET status := -3;
+			END IF;
+		END IF;
+	END IF;
+    IF loginStatus = 1 
+    THEN
+			UPDATE mtg.Users 
+			SET  `FailedLoginAttempts` = 0
+				, `ModifiedBy` = current_user()
+				, `ModifiedDate`	= current_timestamp()
+			WHERE `User_ID` = myUserID
+			AND FailedLoginAttempts > 0;    
+            
+            SELECT loginStatus = ROW_COUNT();
+	END IF;
+   
+    SELECT loginStatus AS LoginStatus;  --  1 if successful
+    
+END //
+DELIMITER ;
+
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1201, 'Can not log in with an inactive account', 'User_Login_With_Username';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1202, 'Password does not match', 'User_Login_With_Username';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1203, 'Missing encrypted password', 'User_Login_With_Username';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT 0, 'User not found', 'User_Login_With_Username';
+
+
+
+DROP PROCEDURE IF EXISTS `User_Reset_Password`;
+DELIMITER //
+CREATE PROCEDURE `User_Reset_Password` (
+    IN userID int,
+	IN encryptedPassword varchar(40)
+ )
+BEGIN
+	IF encryptedPassword = ''
+    THEN
+		SELECT 0 as RowsAffected;
+	ELSE
+		UPDATE mtg.Users 
+		SET   `password`    	= encryptedPassword
+			, `Active`         = 1
+			, `FailedLoginAttempts` = 0
+			, `ModifiedBy` = current_user()
+			, `ModifiedDate`	= current_timestamp()
+		WHERE `User_ID` = userID;    
+    
+		SELECT ROW_COUNT() AS RowsAffected;
+        
+	END IF;
+    
+END //
+DELIMITER ;
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT 0, 'User not found', 'User_Reset_Password';
+
+
+DROP PROCEDURE IF EXISTS `User_Login_With_Email`;
+DELIMITER //
+CREATE PROCEDURE `User_Login_With_Email` (
+    IN emailAddress varchar(255),
+    IN encryptedPassword varchar(40)
+)
+BEGIN
+	DECLARE myUserID int ;    
+    DECLARE currentPassword varchar(40);
+    DECLARE activeStatus int;
+    DECLARE loginStatus int;
+	DECLARE failedAttempts int;
+    SET loginStatus := 0;
+    
+	SELECT `User_ID`, `FailedLoginAttempts`, `Active`,`password`
+	INTO myUserID, failedAttempts, activeStatus, currentPassword
+	FROM mtg.Users 
+	WHERE `Email` = emailAddress;
+
+	SELECT ROW_COUNT() INTO loginStatus;
+    
+    IF loginStatus = 1 
+    THEN
+        IF encryptedPassword = ''
+		THEN
+			SET loginStatus := -1;
+            -- does not count as a fail
+        END IF;
+		IF failedAttempts > 3
+		THEN
+			SET loginStatus := -3;
+            -- don't allow fails to obverload the server by dowing extra work.
+        END IF;
+		IF activeStatus = 0
+		THEN
+			SET loginStatus := -3;
+            -- don't allow fails to obverload the server by dowing extra work.
+        END IF;
+		IF currentPassword <> encryptedPassword THEN
+			SET loginStatus := -2;
+            
+            UPDATE mtg.Users 
+			SET    `FailedLoginAttempts` = failedAttempts + 1
+				, `ModifiedBy` = current_user()
+				, `ModifiedDate`	= current_timestamp()
+			WHERE `User_ID` = myUserID;   
+             
+			IF failedAttempts > 3
+			THEN
+				CALL User_Deactivate( myUserID, @rowsAffected);
+				SET loginStatus := -3;
+			END IF;
+		END IF;
+	END IF;
+    IF loginStatus = 1 
+    THEN
+			UPDATE mtg.Users 
+			SET  `FailedLoginAttempts` = 0
+				, `ModifiedBy` = current_user()
+				, `ModifiedDate`	= current_timestamp()
+			WHERE `User_ID` = myUserID
+			AND FailedLoginAttempts > 0;    
+            
+            SELECT ROW_COUNT() INTO loginStatus;
+	END IF;
+   
+    SELECT loginStatus AS LoginStatus;  --  1 if successful
+    
+END //
+DELIMITER ;
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1301, 'Can not log in with an inactive account', 'User_Login_With_Email';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1302, 'Password does not match', 'User_Login_With_Email';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1303, 'Missing encrypted password', 'User_Login_With_Email';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT 0, 'User not found', 'User_Login_With_Email';
+
+
+DROP PROCEDURE IF EXISTS `User_Change_Password`;
+DELIMITER //
+CREATE PROCEDURE `User_Change_Password` (
+    IN userID int,
+	IN oldPassword varchar(40),
+	IN newPassword varchar(40)
+ )
+BEGIN
+	DECLARE currentPassword varchar(40);
+    DECLARE changeStatus int;
+
+	SET changeStatus = 0;
+    
+	IF newPassword <> ''
+    THEN
+    	SELECT `password`
+		INTO currentPassword
+		FROM mtg.Users 
+		WHERE `User_ID` = userID;
+
+		SELECT ROW_COUNT() INTO changeStatus;
+    
+		IF changeStatus = 1 
+		THEN
+			UPDATE mtg.Users 
+			SET    `password`    	= newPassword
+				, `Active`         = 1
+				, `FailedLoginAttempts` = 0
+				, `ModifiedBy` = current_user()
+				, `ModifiedDate`	= current_timestamp()
+			WHERE `User_ID` = userID;    
+    
+			SELECT ROW_COUNT() INTO changeStatus;
+		ELSE
+			SELECT -1401 INTO changeStatus;
+        END IF;
+        
+	END IF;
+    
+    SELECT changeStatus AS ChangeStatus;
+    
+END //
+DELIMITER ;
+
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1401, 'Old password did not match', 'User_Change_Password';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT 0, 'User not found', 'User_Change_Password';
+
+DROP PROCEDURE IF EXISTS `Link_Create`;
+DELIMITER //
+CREATE PROCEDURE `Link_Create` (
+  card1 varchar(36),
+  card2 varchar(36),
+  score int,
+  creator_id int
+)
+BEGIN
+	-- returns -1 if the card1 was not found
+    -- returns -2 if the card2 was not found
+    -- if the link already exists, it will just return the Link_ID
+    -- the Link_Name will ne in the syntax of [cardname1]|[cardname2] where the name of both cards are truncated to 120 characters if they are more thans 120 characters.alter
+    
+	DECLARE linkName varchar(255);
+    DECLARE cardName1 varchar(255);
+    DECLARE cardName2 varchar(255);
+	DECLARE swap varchar(255);
+	DECLARE linkID int;
+	DECLARE rowsAffected int;
+    DECLARE errorStatus int;
+    DECLARE isNew int;
+   
+    SET errorStatus = 0;
+    SET isNew = 0;
+    
+    SELECT `name` INTO cardName1 FROM mtg.Cards WHERE uuid = card1;
+  
+    SELECT ROW_COUNT() INTO rowsAffected;
+    IF rowsAffected = 0
+    THEN
+		SET errorStatus = -1501;
+	ELSE
+		IF LENGTH(cardName1) > 120
+        THEN
+			SELECT SUBSTRING(cardName1,1,120) INTO cardName1;
+        END IF;
+    END IF;
+    SELECT `name` INTO cardName2  FROM mtg.Cards WHERE uuid = card2;
+    SELECT ROW_COUNT() INTO rowsAffected;
+    IF rowsAffected = 0
+    THEN
+		SET errorStatus = -1502;
+	ELSE
+		IF LENGTH(cardName2) > 120
+        THEN
+			SELECT SUBSTRING(cardName2,1,120) INTO cardName2;
+        END IF;
+    END IF;
+    IF cardName1 IS NULL
+    THEN
+		SET cardName1 = '***NULL***';
+    END IF;
+	IF cardName2 IS NULL
+    THEN
+		SET cardName2 = '***NULL***';
+    END IF;
+
+    IF cardName1 > cardName2
+    THEN
+        SET swap = cardName1;
+        SET cardName1 = cardName2;
+        SET cardName2 = swap;
+    END IF;
+	SELECT concat('[',cardName1, ']|[', cardName2, ']') INTO linkName;
+    
+	SELECT Link_ID INTO linkID FROM mtg.Links WHERE Link_Name = linkName;
+    
+    SELECT ROW_COUNT() INTO rowsAffected;
+    
+    IF rowsAffected = 0 OR errorStatus < 0
+    THEN
+		INSERT INTO mtg.`Links` ( `Link_Name`, `Card_1`, `Card_2`, `User_Score`, `Creator_Score`, `Avg_Comment_Score`, `Number_of_Comments`, `Creator_User_ID`, `CreatedBy`, `CreatedDate`, `ModifiedBy`, `ModifiedDate` )
+        SELECT linkName, card1, card2, score, score, 0, 0, creator_id, current_user(), current_timestamp(), current_user(), current_timestamp();
+        
+		SELECT last_insert_id() INTO linkID;
+    END IF;
+
+	IF errorStatus < 0
+    THEN
+		SELECT errorStatus AS Link_ID, '' AS Link_Name, '' AS Card_1, '' AS Card_2, 0 AS User_Score, 0 AS Creator_Score, 0 AS Creator_User_ID, 0 AS Avg_Comment_Score, 0 AS Number_of_Comments;
+	ELSE
+		SELECT Link_ID, Link_Name, Card_1, Card_2, User_Score, Creator_Score, Creator_User_ID, Avg_Comment_Score, Number_of_Comments FROM mtg.Links WHERE Link_ID = linkID;
+	END IF;
+    
+END
+//
+DELIMITER ;
+
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1501, 'Card 1 was not found', 'Links_Create';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1502, 'Card 2 was not found', 'Links_Create';
+
+
+DROP PROCEDURE IF EXISTS `Link_Update`;
+DELIMITER //
+CREATE PROCEDURE `Link_Update` (
+  linkID int
+  )
+BEGIN
+	DECLARE linkID int;
+    DECLARE avgScore int;
+    DECLARE numComments int;
+    
+    SET linkID = 0;
+    SET avgScore = 0;
+    SET numComments = 0;
+    
+    SELECT AVG(Score), count(*) 
+    INTO avgScore, numComments
+    FROM mtg.Comments
+    WHERE Link_ID = @linkID;
+    
+		UPDATE mtg.Links
+        SET Avg_Comment_Score  = avgScore
+            ,Number_of_Comments  = numComments
+			,ModifiedBy			= current_user()
+			,ModifiedDate		= current_timestamp()
+        WHERE Link_ID = @linkID;
+        
+		SELECT ROW_COUNT() AS rowsAffected;
+		
+END //
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS `Comment_Create`;
+DELIMITER //
+CREATE PROCEDURE `Comment_Create` (
+    IN linkID INT,
+    IN userID INT,
+    IN score  INT,
+    IN commentText varchar(255)
+    )
+BEGIN
+	DECLARE status INT;
+    DECLARE rowsAffected INT;
+    DECLARE commentID INT;
+    
+    SET status = 0;
+    
+    SELECT count(*) INTO rowsAffected FROM mtg.Links WHERE Link_ID = linkID;
+    
+    IF rowsAffected = 1
+    THEN
+        SELECT count(*) INTO rowsAffected FROM mtg.Users WHERE User_ID = userID;
+
+		IF rowsAffected = 1
+		THEN
+    		INSERT INTO mtg.Comments ( Link_ID, User_ID, Score, `Comment`, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate )
+			SELECT linkID, userID, score, commentText, current_user(), current_timestamp(), current_user(), current_timestamp();
+            
+            SELECT last_insert_id() INTO commentID;
+            
+            CALL `Link_Update` ( linkID );
+            
+            SELECT Comment_ID, Link_ID, User_ID, Score, `Comment`
+            FROM mtg.Comments WHERE Comment_ID = commentID;
+		ELSE
+			SET status = -1602;
+            SELECT status AS Comment_ID, 0 aS Link_ID, 0 AS User_ID, 0 AS Score, '' AS `Comment`;
+		END IF;
+     ELSE
+			SET status = -1601;
+            SELECT status AS Comment_ID, 0 aS Link_ID, 0 AS User_ID, 0 AS Score, '' AS `Comment`;
+    END IF;
+    
+END //
+DELIMITER ;
+
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1601, 'Link ID was not found', 'Comments_Create';
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1602, 'User ID was not found', 'Comments_Create';
+
+
+DROP PROCEDURE IF EXISTS `Comment_Update`;
+DELIMITER //
+CREATE PROCEDURE `Comment_Update` (
+    IN commentID INT,
+    IN score  INT,
+    IN commentText varchar(255)
+    )
+BEGIN
+	DECLARE status INT;
+    DECLARE rowsAffected INT;
+    DECLARE commentID INT;
+    
+    SET status = 0;
+    
+    SELECT count(*) INTO rowsAffected FROM mtg.Comments WHERE Comment_ID = commentID;
+    
+    IF rowsAffected = 1
+    THEN
+    	UPDATE mtg.Comments 
+        SET   Score          = score
+            , `Comment`      = commentText
+			, `ModifiedBy`   = current_user()
+			, `ModifiedDate` = current_timestamp()
+		WHERE  Comment_ID = commentID;
+            
+        SELECT last_insert_id() INTO commentID;
+            
+        CALL `Link_Update` ( linkID );
+            
+        SELECT Comment_ID, Link_ID, User_ID, Score, `Comment`
+        FROM mtg.Comments WHERE Comment_ID = commentID;
+     ELSE
+			SET status = -1601;
+            SELECT status AS Comment_ID, 0 aS Link_ID, 0 AS User_ID, 0 AS Score, '' AS `Comment`;
+    END IF;
+    
+END //
+DELIMITER ;
+
+INSERT INTO  mtg.`error_messages`(ErrorNumber, ErrorMEssage, ErrorSource )
+SELECT -1701, 'Comment ID was not found', 'Comments_Update';
+
+
+
+
+ 
+DROP PROCEDURE IF EXISTS `Link_PurgeData`;
+DELIMITER //
+CREATE PROCEDURE `Link_PurgeData` (
+    IN linkID int )
+BEGIN
+	DELETE FROM mtg.Comments
+    WHERE `Link_ID` = linkID;    
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS `Comment_Delete`;
+DELIMITER //
+CREATE PROCEDURE `Comment_Delete` (
+    IN commentID int )
+BEGIN
+	DELETE FROM mtg.Comments
+    WHERE `Comment_ID` = commentID;    
+END //
+DELIMITER ;
+
+
+
+DROP PROCEDURE IF EXISTS `Link_Delete`;
+DELIMITER //
+CREATE PROCEDURE `Link_Delete` (
+    IN linkID int )
+BEGIN
+	DELETE FROM mtg.Links
+    WHERE `Link_ID` = linkID;    
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS `User_PurgeData`;
+DELIMITER //
+CREATE PROCEDURE `User_PurgeData` (
+    IN userID int )
+BEGIN
+
+	DELETE c
+	FROM mtg.Comments c
+	WHERE c.Link_ID IN (
+						SELECT l.Link_ID
+						FROM mtg.Links l 
+                        WHERE l.Creator_User_ID IN (
+													SELECT u.User_ID
+													FROM mtg.Users u
+													WHERE u.User_ID = userID));
+
+DELETE  l
+FROM mtg.Links l 
+JOIN mtg.Users u ON l.Creator_User_ID = u.User_ID
+WHERE u.User_ID = userID;
+
+END //
+DELIMITER ;
+
+  
+DROP PROCEDURE IF EXISTS `User_Delete`;
+DELIMITER //
+CREATE PROCEDURE `User_Delete` (
+    IN userID int )
+BEGIN
+	DELETE FROM mtg.Users 
+    WHERE `User_ID` = userID;    
+END //
+DELIMITER ;
+
+SELECT m.ErrorNumber, m.ErrorMessage, m.ErrorSource 
+FROM mtg.`error_messages` m 
+ORDER BY m.ErrorNumber DESC;
+
