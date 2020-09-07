@@ -13,7 +13,8 @@ const cardController = require('../controllers/card.controller');
 
 // Routes for Cards
 
-router.get('/:id', cardController.findById);
+//router.get('/ByName', cardController.findByName);
+router.get('/:id', cardController.findByUuid);
 router.get('/', cardController.findAll);
 
 module.exports = router;

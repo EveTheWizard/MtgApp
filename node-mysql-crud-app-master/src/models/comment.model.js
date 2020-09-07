@@ -14,21 +14,53 @@ var Comment = function(comment){
 };
 
 // ----------------------------------------------------------------------------
-// TABLE:       mtg.Links
+// TABLE:       mtg.Comments
 // PROCEDURE:   Create
-// PURPOSE:     To create a Link between two cards by a user for commentary
+// PURPOSE:     To create a comment about a link between cards
 // HISTORY: 
 // 2020-09-07   Malarcher   Initial Implementation.
 // -----------------------------------------------------------------------------
 // Example call to the REST API:
 //
-// URL :    http://localhost:5000/api/v1/links
+// POST :    http://localhost:5000/api/v1/comments
 // Body:
 // { 
-//    "card_1" : "38513fa0-ea83-5642-8ecd-4f0b3daa6768",
-//    "card_2" : "b8a68840-4044-52c0-a14e-0a1c630ba42c",
-//    "score" : 23,
-//    "creator_id" : 10
+//     "link_id" : 8,
+//     "user_id" : 10,
+//     "score" : 9, 
+//     "comment_text" : "I really like it." 
+// }
+//
+// RESPONSE:
+// {
+//     "error": false,
+//     "message": "Comment added successfully!",
+//     "data": [
+//         [
+//             {
+//                 "rowsAffected": 0
+//             }
+//         ],
+//         [
+//             {
+//                 "Comment_ID": 3,
+//                 "Link_ID": 8,
+//                 "User_ID": 10,
+//                 "Score": 9,
+//                 "Comment": "I really like it."
+//             }
+//         ],
+//         {
+//             "fieldCount": 0,
+//             "affectedRows": 0,
+//             "insertId": 0,
+//             "serverStatus": 34,
+//             "warningCount": 0,
+//             "message": "",
+//             "protocol41": true,
+//             "changedRows": 0
+//         }
+//     ]
 // }
 //
 // ------------------------------------------------------------------------------
@@ -63,28 +95,34 @@ Comment.create = function (newComment, result) {
 };
 
 // ----------------------------------------------------------------------------
-// TABLE:       mtg.Links
-// PROCEDURE:   Create
-// PURPOSE:     To create a Link between two cards by a user for commentary
+// TABLE:       mtg.Comments
+// PROCEDURE:   FindByCommentID
+// PURPOSE:     To get a list of comments by Comment ID
 // HISTORY: 
 // 2020-09-07   Malarcher   Initial Implementation.
 // -----------------------------------------------------------------------------
 // Example call to the REST API:
 //
-// URL :    http://localhost:5000/api/v1/links
-// Body:
-// { 
-//    "card_1" : "38513fa0-ea83-5642-8ecd-4f0b3daa6768",
-//    "card_2" : "b8a68840-4044-52c0-a14e-0a1c630ba42c",
-//    "score" : 23,
-//    "creator_id" : 10
-// }
+// GET :    http://localhost:5000/api/v1/comments/findByCommentID/4
+// (no body)
+//
+// RESPONSE:
+//
+// [
+//     {
+//         "Comment_ID": 4,
+//         "Link_ID": 8,
+//         "User_ID": 11,
+//         "Score": 9,
+//         "Comment": "I do not like it."
+//     }
+// ]
 //
 // ------------------------------------------------------------------------------
 
 
-Comment.findById = function (id, result) {
-    let sql = `SELECT Comment_ID, Link_ID, User_ID, Score, Comment_Text FROM mtg.Comments WHERE Comment_ID = ? ORDER BY Score DESC`;
+Comment.findByCommentId = function (id, result) {
+    let sql = "SELECT Comment_ID, Link_ID, User_ID, Score, Comment FROM mtg.Comments WHERE Comment_ID = ? ORDER BY Score DESC";
     console.log("sql: ", sql);
     dbConn.query(sql, id, function (error, res) {             
         if(error) {
@@ -98,28 +136,147 @@ Comment.findById = function (id, result) {
 };
 
 // ----------------------------------------------------------------------------
-// TABLE:       mtg.Links
-// PROCEDURE:   Create
-// PURPOSE:     To create a Link between two cards by a user for commentary
+// TABLE:       mtg.Comments
+// PROCEDURE:   FindByLinkID
+// PURPOSE:     To get a list of comments by Link ID
 // HISTORY: 
 // 2020-09-07   Malarcher   Initial Implementation.
 // -----------------------------------------------------------------------------
 // Example call to the REST API:
 //
-// URL :    http://localhost:5000/api/v1/links
-// Body:
-// { 
-//    "card_1" : "38513fa0-ea83-5642-8ecd-4f0b3daa6768",
-//    "card_2" : "b8a68840-4044-52c0-a14e-0a1c630ba42c",
-//    "score" : 23,
-//    "creator_id" : 10
-// }
+// GET :    http://localhost:5000/api/v1/comments/findByLinkID/8
+// (no body)
 //
+// RESPONSE:
+//
+// [
+//     {
+//         "Comment_ID": 2,
+//         "Link_ID": 8,
+//         "User_ID": 10,
+//         "Score": 9,
+//         "Comment": "I really like it."
+//     },
+//     {
+//         "Comment_ID": 3,
+//         "Link_ID": 8,
+//         "User_ID": 10,
+//         "Score": 9,
+//         "Comment": "I really like it."
+//     },
+//     {
+//         "Comment_ID": 4,
+//         "Link_ID": 8,
+//         "User_ID": 11,
+//         "Score": 9,
+//         "Comment": "I do not like it."
+//     }
+// ]
+// ------------------------------------------------------------------------------
+
+
+Comment.findByLinkId = function (id, result) {
+    let sql = "SELECT Comment_ID, Link_ID, User_ID, Score, Comment FROM mtg.Comments WHERE Link_ID = ? ORDER BY Score DESC";
+    console.log("sql: ", sql);
+    dbConn.query(sql, id, function (error, res) {             
+        if(error) {
+            console.log("error: ", error);
+            result(error, null);
+        }
+        else{
+            result(null, res);
+        }
+    });   
+};
+
+// ----------------------------------------------------------------------------
+// TABLE:       mtg.Comments
+// PROCEDURE:   FindByUserID
+// PURPOSE:     To get a list of comments by User ID
+// HISTORY: 
+// 2020-09-07   Malarcher   Initial Implementation.
+// -----------------------------------------------------------------------------
+// Example call to the REST API:
+//
+// GET :    http://localhost:5000/api/v1/comments/findByUserID/11
+// (no body)
+//
+// RESPONSE:
+//
+// [
+//     {
+//         "Comment_ID": 4,
+//         "Link_ID": 8,
+//         "User_ID": 11,
+//         "Score": 9,
+//         "Comment": "I do not like it."
+//     }
+// ]
+//
+// ------------------------------------------------------------------------------
+
+Comment.findByUserId = function (id, result) {
+    let sql = "SELECT Comment_ID, Link_ID, User_ID, Score, Comment FROM mtg.Comments WHERE User_ID = ? ORDER BY Score DESC";
+    console.log("sql: ", sql);
+    dbConn.query(sql, id, function (error, res) {             
+        if(error) {
+            console.log("error: ", error);
+            result(error, null);
+        }
+        else{
+            result(null, res);
+        }
+    });   
+};
+
+// ----------------------------------------------------------------------------
+// TABLE:       mtg.Comments
+// PROCEDURE:   Get All Comments
+// PURPOSE:     To a list of all comments
+// HISTORY: 
+// 2020-09-07   Malarcher   Initial Implementation.
+// -----------------------------------------------------------------------------
+// Example call to the REST API:
+//
+// GET :    http://localhost:5000/api/v1/comments
+// (no body)
+//
+// RESPONSE:
+// [
+//     {
+//         "Comment_ID": 1,
+//         "Link_ID": 6,
+//         "User_ID": 10,
+//         "Score": 9,
+//         "Comment": "I really like it."
+//     },
+//     {
+//         "Comment_ID": 2,
+//         "Link_ID": 8,
+//         "User_ID": 10,
+//         "Score": 9,
+//         "Comment": "I really like it."
+//     },
+//     {
+//         "Comment_ID": 3,
+//         "Link_ID": 8,
+//         "User_ID": 10,
+//         "Score": 9,
+//         "Comment": "I really like it."
+//     },
+//     {
+//         "Comment_ID": 4,
+//         "Link_ID": 8,
+//         "User_ID": 11,
+//         "Score": 9,
+//         "Comment": "I do not like it."
+//     }
+// ]
 // ------------------------------------------------------------------------------
 
 
 Comment.findAll = function (result) {
-    let sql = `SELECT Comment_ID, Link_ID, User_ID, Score, Comment_Text FROM mtg.Comments ORDER BY Score DESC`;
+    let sql = "SELECT Comment_ID, Link_ID, User_ID, Score, Comment FROM mtg.Comments ORDER BY Score DESC";
     console.log("sql: ", sql);
     dbConn.query(sql, function (error, res) {
         if(error) {
@@ -133,38 +290,6 @@ Comment.findAll = function (result) {
     });   
 };
 
-// This is the PUT route to update the comment specified by the comment_id
-// TABLE: Comments
-// EXAMPLE PUT:  http://localhost:5000/api/v1/comments/update
-//
-// The body contains:
-// { 
-//    "comment_id" : 26,
-//    "comment_name" : "George",
-//    "email" : "george@aol.com",
-//    "rank" : 12,
-//    "comment_score" : 25
-// }
-//
-// ----------------------------------------------------------------------------
-// TABLE:       mtg.Links
-// PROCEDURE:   Create
-// PURPOSE:     To create a Link between two cards by a user for commentary
-// HISTORY: 
-// 2020-09-07   Malarcher   Initial Implementation.
-// -----------------------------------------------------------------------------
-// Example call to the REST API:
-//
-// URL :    http://localhost:5000/api/v1/links
-// Body:
-// { 
-//    "card_1" : "38513fa0-ea83-5642-8ecd-4f0b3daa6768",
-//    "card_2" : "b8a68840-4044-52c0-a14e-0a1c630ba42c",
-//    "score" : 23,
-//    "creator_id" : 10
-// }
-//
-// ------------------------------------------------------------------------------
 
 
 Comment.update = function(id, comment, result){
@@ -204,15 +329,14 @@ Comment.update = function(id, comment, result){
 // -----------------------------------------------------------------------------
 // Example call to the REST API:
 //
-// URL :    http://localhost:5000/api/v1/links
-// Body:
-// { 
-//    "card_1" : "38513fa0-ea83-5642-8ecd-4f0b3daa6768",
-//    "card_2" : "b8a68840-4044-52c0-a14e-0a1c630ba42c",
-//    "score" : 23,
-//    "creator_id" : 10
-// }
+// DELETE :    http://localhost:5000/api/v1/comments/1
+// (no body)
 //
+// RESPONSE:
+// {
+//     "error": false,
+//     "message": "Comment successfully deleted"
+// }
 // ------------------------------------------------------------------------------
 
 

@@ -9,36 +9,66 @@ var User = function(user){
     this.user_id     = user.user_id;
     this.user_name   = user.user_name;
     this.email       = user.email;
+    this.password    = user.password;
     this.rank        = user.rank;
     this.user_score  = user.user_score;
 };
 
 // ----------------------------------------------------------------------------
-// TABLE:       mtg.Links
+// TABLE:       mtg.Users
 // PROCEDURE:   Create
-// PURPOSE:     To create a Link between two cards by a user for commentary
+// PURPOSE:     To create a new user for the mtgApp
 // HISTORY: 
 // 2020-09-07   Malarcher   Initial Implementation.
 // -----------------------------------------------------------------------------
 // Example call to the REST API:
 //
-// URL :    http://localhost:5000/api/v1/links
-// Body:
+// POST :    http://localhost:5000/api/v1/users
+// BODY:
 // { 
-//    "card_1" : "38513fa0-ea83-5642-8ecd-4f0b3daa6768",
-//    "card_2" : "b8a68840-4044-52c0-a14e-0a1c630ba42c",
-//    "score" : 23,
-//    "creator_id" : 10
+//    "user_name" : "jsmith",
+//    "email" : "jsmith123@aol.com",
+//    "password" : "dontTell",
+//    "rank" : 1,
+//    "user_score" : 2
+// }
+//
+// RETURNS:
+// {
+//    "error": false,
+//    "message": "User added successfully!",
+//    "data": [
+//        [
+//            {
+//                "User_ID": 12,
+//                "User_Name": "jsmith",
+//                "Email": "jsmith123@aol.com",
+//                "SignUp_Date": "2020-09-07T17:10:54.000Z",
+//                "Rank": 1,
+//                "User_Score": 2
+//            }
+//        ],
+//        {
+//            "fieldCount": 0,
+//            "affectedRows": 0,
+//            "insertId": 0,
+//            "serverStatus": 2,
+//            "warningCount": 0,
+//            "message": "",
+//            "protocol41": true,
+//            "changedRows": 0
+//        }
+//    ]
 // }
 //
 // ------------------------------------------------------------------------------
 
 
 User.create = function (newUser, result) {    
-    let sql = `CALL User_Create ( ?,?,?,? )`;
+    let sql = `CALL User_Create ( ?,?,?,?,? )`;
     console.log("sql: ", sql);
     dbConn.query(sql, 
-        [newUser.user_name, newUser.email, newUser.rank, newUser.user_score]
+        [newUser.user_name, newUser.email, newUser.password, newUser.rank, newUser.user_score]
     , function (err, res) {
         if(err) {
             console.log("error: ", err);
@@ -63,29 +93,45 @@ User.create = function (newUser, result) {
 };
 
 // ----------------------------------------------------------------------------
-// TABLE:       mtg.Links
-// PROCEDURE:   Create
-// PURPOSE:     To create a Link between two cards by a user for commentary
+// TABLE:       mtg.Users
+// PROCEDURE:   Find By ID
+// PURPOSE:     To retrieve user information about a particular user identified 
+//              by their User_ID number.
 // HISTORY: 
 // 2020-09-07   Malarcher   Initial Implementation.
 // -----------------------------------------------------------------------------
 // Example call to the REST API:
 //
-// URL :    http://localhost:5000/api/v1/links
-// Body:
-// { 
-//    "card_1" : "38513fa0-ea83-5642-8ecd-4f0b3daa6768",
-//    "card_2" : "b8a68840-4044-52c0-a14e-0a1c630ba42c",
-//    "score" : 23,
-//    "creator_id" : 10
-// }
+// GET :    http://localhost:5000/api/v1/users/12
+// (no body)
+//
+// RETURNS:
+// [
+//     {
+//         "User_ID": 12,
+//         "User_Name": "jsmith",
+//         "Email": "jsmith123@aol.com",
+//         "SignUp_Date": "2020-09-07T17:10:54.000Z",
+//         "Rank": 1,
+//         "User_Score": 2,
+//         "Active": {
+//             "type": "Buffer",
+//             "data": [
+//                 1
+//             ]
+//         },
+//         "FailedLoginAttempts": 0
+//     }
+// ]
 //
 // ------------------------------------------------------------------------------
 
 
 User.findById = function (id, result) {
-    let sql = `Select * from mtg.Users where User_ID = ? `;
-    console.log("sql: ", sql);
+    let sql = "SELECT User_ID, User_Name, Email, SignUp_Date, `Rank`, User_Score, `Active`, FailedLoginAttempts FROM mtg.Users WHERE User_ID = ? ";
+    console.log("sql: '", sql, "'");
+    console.log("id: '", id, "'");
+    
     dbConn.query(sql, id, function (error, res) {             
         if(error) {
             console.log("error: ", error);
@@ -98,28 +144,51 @@ User.findById = function (id, result) {
 };
 
 // ----------------------------------------------------------------------------
-// TABLE:       mtg.Links
-// PROCEDURE:   Create
-// PURPOSE:     To create a Link between two cards by a user for commentary
+// TABLE:       mtg.Users
+// PROCEDURE:   Find All
+// PURPOSE:     To get a list of all users, sorted by user_id.
 // HISTORY: 
 // 2020-09-07   Malarcher   Initial Implementation.
 // -----------------------------------------------------------------------------
 // Example call to the REST API:
 //
-// URL :    http://localhost:5000/api/v1/links
-// Body:
-// { 
-//    "card_1" : "38513fa0-ea83-5642-8ecd-4f0b3daa6768",
-//    "card_2" : "b8a68840-4044-52c0-a14e-0a1c630ba42c",
-//    "score" : 23,
-//    "creator_id" : 10
-// }
+// GET :    http://localhost:5000/api/v1/users
+// (no body)
+//
+// RETURNS:
+//
+// [
+//     {
+//         "User_ID": 10,
+//         "User_Name": "TESTUSER_1",
+//         "Email": "testuser1@gmail.com",
+//         "SignUp_Date": "2020-09-06T19:58:45.000Z",
+//         "Rank": 7,
+//         "User_Score": 2
+//     },
+//     {
+//         "User_ID": 11,
+//         "User_Name": "TESTUSER_2",
+//         "Email": "testuser2@gmail.com",
+//         "SignUp_Date": "2020-09-06T19:58:45.000Z",
+//         "Rank": 9,
+//         "User_Score": 8
+//     },
+//     {
+//         "User_ID": 12,
+//         "User_Name": "jsmith",
+//         "Email": "jsmith123@aol.com",
+//         "SignUp_Date": "2020-09-07T17:10:54.000Z",
+//         "Rank": 1,
+//         "User_Score": 2
+//     }
+// ]
 //
 // ------------------------------------------------------------------------------
 
 
 User.findAll = function (result) {
-    let sql = `Select * from mtg.Users`;
+    let sql = "SELECT User_ID, User_Name, Email, SignUp_Date, `Rank`, User_Score, `Active`, FailedLoginAttempts FROM mtg.Users ORDER BY User_ID";
     console.log("sql: ", sql);
     dbConn.query(sql, function (error, res) {
         if(error) {
@@ -133,37 +202,50 @@ User.findAll = function (result) {
     });   
 };
 
-// This is the PUT route to update the user specified by the user_id
-// TABLE: Users
-// EXAMPLE PUT:  http://localhost:5000/api/v1/users/update
-//
-// The body contains:
-// { 
-//    "user_id" : 26,
-//    "user_name" : "George",
-//    "email" : "george@aol.com",
-//    "rank" : 12,
-//    "user_score" : 25
-// }
-//
+
 // ----------------------------------------------------------------------------
-// TABLE:       mtg.Links
-// PROCEDURE:   Create
-// PURPOSE:     To create a Link between two cards by a user for commentary
+// TABLE:       mtg.Users
+// PROCEDURE:   Update
+// PURPOSE:     To update information about a user.
 // HISTORY: 
 // 2020-09-07   Malarcher   Initial Implementation.
 // -----------------------------------------------------------------------------
 // Example call to the REST API:
 //
-// URL :    http://localhost:5000/api/v1/links
+// PUT :    http://localhost:5000/api/v1/users/update
 // Body:
 // { 
-//    "card_1" : "38513fa0-ea83-5642-8ecd-4f0b3daa6768",
-//    "card_2" : "b8a68840-4044-52c0-a14e-0a1c630ba42c",
-//    "score" : 23,
-//    "creator_id" : 10
+//     "user_id" : 12,
+//     "user_name" : "George",
+//     "email" : "george@aol.com",
+//     "rank" : 12,
+//     "user_score" : 25
 // }
 //
+// RESPONSE:
+// [
+//     [
+//       RowDataPacket {
+//         User_ID: 12,
+//         User_Name: 'George',
+//         Email: 'george@aol.com',
+//         SignUp_Date: 2020-09-07T18:15:03.000Z,
+//         Rank: 12,
+//         User_Score: 25
+//       }
+//     ],
+//     OkPacket {
+//       fieldCount: 0,
+//       affectedRows: 0,
+//       insertId: 0,
+//       serverStatus: 2,
+//       warningCount: 0,
+//       message: '',
+//       protocol41: true,
+//       changedRows: 0
+//     }
+//   ]
+  
 // ------------------------------------------------------------------------------
 
 
@@ -193,37 +275,27 @@ User.update = function(id, user, result)
 };
 
 
-
-// This is the PUT route to update the user specified by the user_id
-// TABLE: Users
-// EXAMPLE PUT:  http://localhost:5000/api/v1/users/update
-//
-// The body contains:
-// { 
-//    "user_id" : 26,
-//    "user_name" : "George",
-//    "email" : "george@aol.com",
-//    "rank" : 12,
-//    "user_score" : 25
-// }
-//
 // ----------------------------------------------------------------------------
-// TABLE:       mtg.Links
-// PROCEDURE:   Create
-// PURPOSE:     To create a Link between two cards by a user for commentary
+// TABLE:       mtg.Users
+// PROCEDURE:   Activate
+// PURPOSE:     To allow a user to log into the mtgApp after being deactivated.
 // HISTORY: 
 // 2020-09-07   Malarcher   Initial Implementation.
 // -----------------------------------------------------------------------------
 // Example call to the REST API:
 //
-// URL :    http://localhost:5000/api/v1/links
-// Body:
+// POST :    http://localhost:5000/api/v1/users/activate
+// BODY:
 // { 
-//    "card_1" : "38513fa0-ea83-5642-8ecd-4f0b3daa6768",
-//    "card_2" : "b8a68840-4044-52c0-a14e-0a1c630ba42c",
-//    "score" : 23,
-//    "creator_id" : 10
+//    "user_id" : 12
 // }
+//
+// RESPONSE:
+// {
+//    "error": false,
+//    "message": "User successfully updated"
+// }
+//
 //
 // ------------------------------------------------------------------------------
 
@@ -250,21 +322,25 @@ User.activate = function(id, user, result){
 
 // ----------------------------------------------------------------------------
 // TABLE:       mtg.Links
-// PROCEDURE:   Create
-// PURPOSE:     To create a Link between two cards by a user for commentary
+// PROCEDURE:   Deactivate
+// PURPOSE:     To disallow a user from logging into the mtgApp.
 // HISTORY: 
 // 2020-09-07   Malarcher   Initial Implementation.
 // -----------------------------------------------------------------------------
 // Example call to the REST API:
 //
-// URL :    http://localhost:5000/api/v1/links
-// Body:
+// POST :    http://localhost:5000/api/v1/users/deactivate
+// BODY:
 // { 
-//    "card_1" : "38513fa0-ea83-5642-8ecd-4f0b3daa6768",
-//    "card_2" : "b8a68840-4044-52c0-a14e-0a1c630ba42c",
-//    "score" : 23,
-//    "creator_id" : 10
+//    "user_id" : 12
 // }
+//
+// RESPONSE:
+// {
+//    "error": false,
+//    "message": "User successfully updated"
+// }
+//
 //
 // ------------------------------------------------------------------------------
 
@@ -301,13 +377,13 @@ User.deactivate = function(id, user, result){
 // -----------------------------------------------------------------------------
 // Example call to the REST API:
 //
-// URL :    http://localhost:5000/api/v1/links
-// Body:
-// { 
-//    "card_1" : "38513fa0-ea83-5642-8ecd-4f0b3daa6768",
-//    "card_2" : "b8a68840-4044-52c0-a14e-0a1c630ba42c",
-//    "score" : 23,
-//    "creator_id" : 10
+// DELETE :    http://localhost:5000/api/v1/users/12
+// (no body)
+//
+// RESPONSE:
+// {
+//    "error": false,
+//    "message": "User successfully deleted"
 // }
 //
 // ------------------------------------------------------------------------------

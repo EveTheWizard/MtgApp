@@ -23,9 +23,9 @@ exports.findAll = function(request, resultSet) {
     });
 };
 
-exports.findById = function(req, resultSet) {
-    Card.findById(req.params.id, function(error, Card) {
-        console.log("card controller findById: '", req.params.id, "'");
+exports.findByUuid = function(req, resultSet) {
+    Card.findByUuid(req.params.id, function(error, Card) {
+        console.log("card controller findByUuid: '", req.params.id, "'");
         if (error)
         resultSet.send(error);
 
@@ -34,3 +34,14 @@ exports.findById = function(req, resultSet) {
     });
 };
 
+
+// exports.findByName = function(req, resultSet) {
+//     Card.findByName(req.params, function(error, Card) {
+//         console.log("card controller findByName: '", req.params, "'");
+//         if (error)
+//         resultSet.send(error);
+
+//         console.log('resultSet', Card);
+//         resultSet.json(Card);
+//     });
+// };

@@ -1,5 +1,5 @@
 {
-  "name": "mtg Card Link Comments",
+  "name": "mtgApp",
   "version": "1.0.0",
   "description": "This is app for testing a connection to mysql",
   "main": "server.js",

@@ -13,7 +13,10 @@ const commentController = require('../controllers/comment.controller');
 
 // Routes for Comments
 
-router.get('/:id', commentController.findById);
+router.get('/findByCommentId/:id', commentController.findByCommentId);
+router.get('/findByLinkId/:id', commentController.findByLinkId);
+router.get('/findByUserId/:id', commentController.findByUserId);
+
 
 router.delete('/:id', commentController.delete);
 

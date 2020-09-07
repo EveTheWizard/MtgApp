@@ -38,15 +38,28 @@ exports.create = function(req, res) {
 };
 
 
-exports.findById = function(req, resultSet) {
-    Comment.findById(req.params.id, function(error, Comment) {
+exports.findByCommentId = function(req, resultSet) {
+    Comment.findByCommentId(req.params.id, function(error, Comment) {
         if (error)
         resultSet.send(error);
         resultSet.json(Comment);
     });
 };
 
-
+exports.findByLinkId = function(req, resultSet) {
+    Comment.findByLinkId(req.params.id, function(error, Comment) {
+        if (error)
+        resultSet.send(error);
+        resultSet.json(Comment);
+    });
+};
+exports.findByUserId = function(req, resultSet) {
+    Comment.findByUserId(req.params.id, function(error, Comment) {
+        if (error)
+        resultSet.send(error);
+        resultSet.json(Comment);
+    });
+};
 exports.update = function(request, resultSet) {
     console.log("update request header: '",request.header,"'");
     console.log("update request body: '", request.body + "'");
