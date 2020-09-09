@@ -68,7 +68,7 @@ CREATE TABLE `cards` (
   `purchaseUrls` text,
   `rarity` varchar(20) NOT NULL,
   `scryfallId` varchar(36) NOT NULL,
-  `scryfallIluserslustrationId` varchar(36) NOT NULL,
+  `scryfallIllustrationId` varchar(36) NOT NULL,
   `scryfallOracleId` varchar(36) NOT NULL,
   `setCode` varchar(10) NOT NULL,
   `side` varchar(10) NOT NULL,

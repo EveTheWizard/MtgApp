@@ -4,9 +4,7 @@
 using System.Data;
 using System.IO;
 using System.Linq;
-using Excel = Microsoft.Office.Interop.Excel;  // Project -> Add Reference... -> COM -> Microsoft Excel 16.0 Object Library version 1.9
-using MySql.Data; // Project -> Add Reference... -> MySql.data 8.0.21
-using Microsoft.Office.Interop.Excel;
+using MySql.Data; // Project -> Manage NuGet Packages... -> MySql.data 8.0.21
 using DataTable = System.Data.DataTable;
 using System.Transactions;
 
@@ -108,7 +106,7 @@ namespace MtgImport
                         break;
                     }
                     if (fileContents[startIndex] == '\n')  startIndex++;
-                    System.Console.WriteLine($"Processing {startIndex}...{endingIndex} of fileContents.length = {fileContents.Length}   Rows Copied = {rowsCopied}");
+                    System.Console.WriteLine($"Processing {startIndex}...{endingIndex} of fileContents.length = {fileContents.Length}  Record# {rowNumber} Rows Copied = {rowsCopied}");
                     currentLine = fileContents.Substring(startIndex, (endingIndex - startIndex));
                     startIndex = endingIndex + 1;
                     int cr = currentLine.IndexOf('\r');
@@ -122,14 +120,15 @@ namespace MtgImport
 
                             int columnIndex = dtTarget.Columns.IndexOf(fieldNames[i]);
 
-                            if (columnIndex < 0)
-                            {
-                                return $"Field '{fieldNames[i]}' was not found in the target table.";
-                            }
-                            else
-                            {
+  //                          if (columnIndex < 0)
+  //                          {
+  //                              return $"Field '{fieldNames[i]}' was not found in the target table.";
+  //                          }
+  //                          else
+                            //if (columnIndex >= 0)
+                            //{
                                 FieldToColumnMapping.Add(i, columnIndex);
-                            }
+                            //}
                         }
                     }
                     else
@@ -219,9 +218,12 @@ namespace MtgImport
 
                                 //    System.Console.WriteLine($"row {rowNumber} field {fieldIndex} of {fieldValues.Count}  colIndex {colIndex} of {dr.Table.Columns.Count} ({len}) '{fieldValues[fieldIndex]}'");
 
-                                if ((0 <= colIndex) && (colIndex < dr.Table.Columns.Count))
+                                if (colIndex < dr.Table.Columns.Count)
                                 {
-                                    dr[colIndex] = fieldValues[fieldIndex];
+                                    if (0 <= colIndex)
+                                    {
+                                        dr[colIndex] = fieldValues[fieldIndex];
+                                    }
                                 }
                             }
                             //System.Console.WriteLine($"\rrow {rowNumber}");
@@ -321,7 +323,13 @@ namespace MtgImport
         static void Main(string[] args)
         {
             MtgImport p = new MtgImport();
-            string errorMessage = p.LoadCvsFileIntoMySqlTable(@"U:\TFS\SoftwareMotifsProjects\MtgImport\Cards.csv", "mtg.Cards", "Persist Security Info=False;database=mtg;server=localhost;user id=mtgAdmin;Password=Godzilla2020!;");
+
+            string pathOfCsvFile = $@"U:\TFS\SoftwareMotifsProjects\MtgImport\Cards.csv";  // where on your machine is the csv file to load
+            string ipAddressOfMySqlSewrver = "127.0.0.1"; // "192.168.1.82";  // 127.0.0.1 for localhost
+            string mySqlUserID = "your username";
+            string mySqlPassword = "your password";
+
+            string errorMessage = p.LoadCvsFileIntoMySqlTable(pathOfCsvFile, "mtg.Cards", "Persist Security Info=False;database=mtg;server=" + ipAddressOfMySqlSewrver +  ";user id=" + mySqlUserID+ ";Password=" + mySqlPassword + ";");
 
             if (errorMessage == "")
             {
@@ -332,4 +340,5 @@ namespace MtgImport
             System.Console.WriteLine($"Done");
         }
     }
+}
 }
